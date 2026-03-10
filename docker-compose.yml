@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: real-estate-dashboard
+    restart: always # Keep alive on VPS reboot
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      # Important for Next.js image loading if using remote patterns, etc (though not strictly required right now)
+    volumes:
+      # Mount the prisma directory so the SQLite DB persists across container restarts
+      - ./prisma:/app/prisma
+    # Optional: Run prisma db push before starting the server to ensure DB is initialized
+    # command: sh -c "npx prisma db push && node server.js"

@@ -1,0 +1,56 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Office {
+  id               String   @id @default(uuid())
+  title            String?
+  city             String
+  surface          Float
+  basePrice        Float
+  description      String?
+  extractedDetails String?  // AI parsed detailed measurements of walls, ceilings, etc.
+  imageUrls        String?  // JSON array of image paths, e.g.: '["url1","url2"]'
+  planUrl          String?
+  availability     Boolean  @default(true)
+  quotes           Quote[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model RenovationOption {
+  id         String   @id @default(uuid())
+  category   String   // e.g., 'Painting', 'Electricity', 'Floors'
+  name       String   // e.g., 'Standard Paint', 'Premium Wiring'
+  pricePerM2 Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  quotes    Quote[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Quote {
+  id               String   @id @default(uuid())
+  clientId         String
+  client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  officeId         String
+  office           Office   @relation(fields: [officeId], references: [id], onDelete: Cascade)
+  renovationsJson  String   // Stores stringified JSON of selected renovations and their calculated costs
+  totalPrice       Float
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
