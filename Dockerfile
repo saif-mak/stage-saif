@@ -24,9 +24,9 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Run as root to avoid permission issues with npx/prisma in console
 USER root
 
+COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/public ./public
 RUN mkdir .next
-COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 
