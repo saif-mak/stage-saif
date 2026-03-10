@@ -7,13 +7,10 @@ export async function GET() {
         const offices = await prisma.office.findMany({
             orderBy: { createdAt: 'desc' },
         });
-        return NextResponse.json(offices);
+        return NextResponse.json(Array.isArray(offices) ? offices : []);
     } catch (error) {
         console.error('Error fetching offices:', error);
-        return NextResponse.json(
-            { error: 'Failed to fetch offices' },
-            { status: 500 }
-        );
+        return NextResponse.json([], { status: 500 });
     }
 }
 

@@ -20,10 +20,18 @@ export default function Home() {
     fetch('/api/offices')
       .then(res => res.json())
       .then(data => {
-        setOffices(data);
+        if (Array.isArray(data)) {
+          setOffices(data);
+        } else {
+          console.error('Data fetched is not an array:', data);
+          setOffices([]);
+        }
         setIsLoading(false);
       })
-      .catch(() => setIsLoading(false));
+      .catch((err) => {
+        console.error('Fetch error:', err);
+        setIsLoading(false);
+      });
   }, []);
 
   if (isLoading) {
