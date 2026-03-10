@@ -34,5 +34,5 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Automatically run prisma generate at startup to ensure the client is ready
-CMD ["sh", "-c", "npx prisma generate && node server.js"]
+# Start the Next.js server directly
+CMD ["node", "server.js"]
